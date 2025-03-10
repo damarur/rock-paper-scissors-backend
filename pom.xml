@@ -14,30 +14,29 @@
   <version>0.0.1-SNAPSHOT</version>
   <name>rock-paper-scissors-backend</name>
   <description>rock-paper-scissors-backend</description>
-  <url/>
-  <licenses>
-    <license/>
-  </licenses>
-  <developers>
-    <developer/>
-  </developers>
-  <scm>
-    <connection/>
-    <developerConnection/>
-    <tag/>
-    <url/>
-  </scm>
   <properties>
     <java.version>21</java.version>
+    <maven.compiler.source>21</maven.compiler.source>
+    <maven.compiler.target>21</maven.compiler.target>
+    <openapi-generator-maven-plugin.version>7.7.0</openapi-generator-maven-plugin.version>
+    <springdoc-openapi-starter-webmvc-ui.version>2.8.5</springdoc-openapi-starter-webmvc-ui.version>
+    <swagger-annotations.version>2.2.28</swagger-annotations.version>
+    <jackson-databind-nullable.version>0.2.6</jackson-databind-nullable.version>
+    <mapstruct.version>1.6.3</mapstruct.version>
+    <openapi-basedir>${project.basedir}/src/main/resources/openapi</openapi-basedir>
   </properties>
   <dependencies>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-data-jpa</artifactId>
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-web</artifactId>
+      <artifactId>spring-boot-starter-actuator</artifactId>
     </dependency>
     <dependency>
       <groupId>org.flywaydb</groupId>
@@ -57,11 +56,6 @@
       <optional>true</optional>
     </dependency>
     <dependency>
-      <groupId>com.h2database</groupId>
-      <artifactId>h2</artifactId>
-      <scope>runtime</scope>
-    </dependency>
-    <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-configuration-processor</artifactId>
       <optional>true</optional>
@@ -72,8 +66,53 @@
       <optional>true</optional>
     </dependency>
     <dependency>
+      <groupId>jakarta.annotation</groupId>
+      <artifactId>jakarta.annotation-api</artifactId>
+      <version>${jakarta-annotation.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>jakarta.validation</groupId>
+      <artifactId>jakarta.validation-api</artifactId>
+      <version>${jakarta-validation.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>io.swagger.core.v3</groupId>
+      <artifactId>swagger-annotations</artifactId>
+      <version>${swagger-annotations.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>io.swagger.core.v3</groupId>
+      <artifactId>swagger-models</artifactId>
+      <version>${swagger-annotations.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.openapitools</groupId>
+      <artifactId>jackson-databind-nullable</artifactId>
+      <version>${jackson-databind-nullable.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.mapstruct</groupId>
+      <artifactId>mapstruct</artifactId>
+      <version>${mapstruct.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springdoc</groupId>
+      <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+      <version>${springdoc-openapi-starter-webmvc-ui.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-collections4</artifactId>
+      <version>4.4</version>
+    </dependency>
+    <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.h2database</groupId>
+      <artifactId>h2</artifactId>
       <scope>test</scope>
     </dependency>
   </dependencies>
@@ -83,15 +122,31 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.14.0</version>
         <configuration>
+          <compilerArgs>
+            <arg>-parameters</arg>
+          </compilerArgs>
+          <release>${maven.compiler.release}</release>
           <annotationProcessorPaths>
             <path>
               <groupId>org.springframework.boot</groupId>
               <artifactId>spring-boot-configuration-processor</artifactId>
             </path>
             <path>
+              <groupId>org.mapstruct</groupId>
+              <artifactId>mapstruct-processor</artifactId>
+              <version>${mapstruct.version}</version>
+            </path>
+            <path>
+              <groupId>org.projectlombok</groupId>
+              <artifactId>lombok-mapstruct-binding</artifactId>
+              <version>0.2.0</version>
+            </path>
+            <path>
               <groupId>org.projectlombok</groupId>
               <artifactId>lombok</artifactId>
+              <version>${lombok.version}</version>
             </path>
           </annotationProcessorPaths>
         </configuration>
@@ -107,6 +162,47 @@
             </exclude>
           </excludes>
         </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.openapitools</groupId>
+        <artifactId>openapi-generator-maven-plugin</artifactId>
+        <version>${openapi-generator-maven-plugin.version}</version>
+        <executions>
+          <execution>
+            <id>generate-open-api</id>
+            <goals>
+              <goal>generate</goal>
+            </goals>
+            <phase>generate-sources</phase>
+            <configuration>
+              <inputSpec>${openapi-basedir}/open-api.yaml</inputSpec>
+              <output>${project.basedir}/src/main</output>
+              <generatorName>spring</generatorName>
+              <configOptions>
+                <sourceFolder>java</sourceFolder>
+                <serializableModel>true</serializableModel>
+                <dateLibrary>java8</dateLibrary>
+                <library>spring-boot</library>
+                <java8>true</java8>
+                <useSpringBoot3>true</useSpringBoot3>
+                <useSwaggerUI>true</useSwaggerUI>
+                <hideGenerationTimestamp>true</hideGenerationTimestamp>
+                <interfaceOnly>true</interfaceOnly>
+                <documentationProvider>springdoc</documentationProvider>
+                <useTags>true</useTags>
+              </configOptions>
+              <modelNameSuffix>DTO</modelNameSuffix>
+              <modelPackage>es.damarur.rock.paper.scissors.generated.dto</modelPackage>
+              <generateModelDocumentation>false</generateModelDocumentation>
+              <generateModelTests>false</generateModelTests>
+              <apiPackage>es.damarur.rock.paper.scissors.generated.api</apiPackage>
+              <generateApis>true</generateApis>
+              <skipOperationExample>true</skipOperationExample>
+              <generateSupportingFiles>false</generateSupportingFiles>
+              <ignoreFileOverride>${project.basedir}/.openapi-generator-ignore</ignoreFileOverride>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>

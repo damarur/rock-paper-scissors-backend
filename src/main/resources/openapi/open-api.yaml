@@ -1,0 +1,62 @@
+openapi: 3.0.3
+info:
+  title: Rock, Scissors, Paper Game API
+  description: API for playing Rock, Scissors, and Paper game
+  version: 1.0.0
+  contact:
+    email: david.martinez.dev@gmail.com
+
+servers:
+  - url: /api/game
+
+paths:
+  /play:
+    post:
+      summary: Play a round of Rock, Scissors, Paper
+      operationId: playGame
+      tags:
+        - Game
+      requestBody:
+        description: User's choice in the game
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GameOption"
+      responses:
+        200:
+          description: Game result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GameResult"
+
+components:
+  schemas:
+    GameResult:
+      type: object
+      properties:
+        user_choice:
+          $ref: "#/components/schemas/GameOption"
+        machine_choice:
+          $ref: "#/components/schemas/GameOption"
+        result:
+          $ref: "#/components/schemas/Result"
+      required:
+        - user_choice
+        - machine_choice
+        - result
+    GameOption:
+      description: The user's choice in the game.
+      type: string
+      enum:
+        - ROCK
+        - SCISSORS
+        - PAPER
+    Result:
+      description: The result of the game for the user.
+      type: string
+      enum:
+        - WIN
+        - LOSE
+        - DRAW
