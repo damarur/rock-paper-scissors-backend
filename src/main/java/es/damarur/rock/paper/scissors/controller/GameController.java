@@ -1,5 +1,6 @@
 package es.damarur.rock.paper.scissors.controller;
 
+import es.damarur.rock.paper.scissors.exception.InvalidGameException;
 import es.damarur.rock.paper.scissors.generated.api.GameApi;
 import es.damarur.rock.paper.scissors.generated.dto.ChoiceSelectionDTO;
 import es.damarur.rock.paper.scissors.generated.dto.GameResultDTO;
@@ -22,6 +23,9 @@ public class GameController implements GameApi {
 	@Override
 	public ResponseEntity<GameResultDTO> playGame(@Valid @RequestBody ChoiceSelectionDTO choiceSelectionDTO) {
 		Choice userChoice = GameMapper.INSTANCE.toChoice(choiceSelectionDTO.getChoice());
+		if (userChoice == null) {
+			throw InvalidGameException.invalidGame();
+		}
 		Game game = gameService.playGame(userChoice);
 		return ResponseEntity.ok(GameMapper.INSTANCE.toGameResultDTO(game));
 	}

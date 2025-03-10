@@ -1,5 +1,6 @@
 package es.damarur.rock.paper.scissors.service.strategy;
 
+import es.damarur.rock.paper.scissors.exception.InvalidGameException;
 import es.damarur.rock.paper.scissors.model.Choice;
 import es.damarur.rock.paper.scissors.model.Result;
 import org.springframework.stereotype.Component;
@@ -21,8 +22,7 @@ public class RockChoice implements ChoiceSelection {
 		} else if (userChoice == Choice.SCISSORS) {
 			return Result.WIN;
 		} else {
-			// TODO throw a dedicated exception
-			return null;
+			throw InvalidGameException.invalidGame();
 		}
 	}
 

@@ -15,25 +15,25 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Audit {
 
-	@Column(name = "created_date", updatable = false)
-	private Instant createdDate;
+	@Column(name = "created_at", updatable = false)
+	private Instant createdAt;
 
-	@Column(name = "modified_date")
-	private Instant modifiedDate;
+	@Column(name = "modified_at")
+	private Instant modifiedAt;
 
 	@PrePersist
 	public void prePersist() {
-		if (this.createdDate == null) {
-			createdDate = Instant.now();
+		if (this.createdAt == null) {
+			createdAt = Instant.now();
 		}
-		if (this.modifiedDate == null) {
-			modifiedDate = Instant.now();
+		if (this.modifiedAt == null) {
+			modifiedAt = Instant.now();
 		}
 	}
 
 	@PreUpdate
 	public void preUpdate() {
-		modifiedDate = Instant.now();
+		modifiedAt = Instant.now();
 	}
 
 }
