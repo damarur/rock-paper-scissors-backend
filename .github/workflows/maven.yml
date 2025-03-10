@@ -18,14 +18,19 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-    - name: Set up JDK 21
-      uses: actions/setup-java@v4
-      with:
-        java-version: '21'
-        distribution: 'temurin'
-        cache: maven
-    - name: Build with Maven and run SonarCloud
-      run: mvn -B verify sonar:sonar -Dsonar.projectKey=rock-paper-scissors-backend -Dsonar.organization=damarur -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=${{ SONAR_TOKEN }}
-      env:
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      - uses: actions/checkout@v4
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: maven
+      - name: Set up secret file
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: |
+          echo $SONAR_TOKEN
+      - name: Build with Maven and run SonarCloud
+        run: mvn -B verify sonar:sonar -Dsonar.projectKey=rock-paper-scissors-backend -Dsonar.organization=damarur -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=${{ secrets.SONAR_TOKEN }}
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
