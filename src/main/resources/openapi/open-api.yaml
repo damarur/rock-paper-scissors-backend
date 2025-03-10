@@ -22,7 +22,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/GameOption"
+              $ref: "#/components/schemas/ChoiceSelection"
       responses:
         200:
           description: Game result
@@ -37,16 +37,21 @@ components:
       type: object
       properties:
         user_choice:
-          $ref: "#/components/schemas/GameOption"
+          $ref: "#/components/schemas/Choice"
         machine_choice:
-          $ref: "#/components/schemas/GameOption"
+          $ref: "#/components/schemas/Choice"
         result:
           $ref: "#/components/schemas/Result"
       required:
         - user_choice
         - machine_choice
         - result
-    GameOption:
+    ChoiceSelection:
+      type: object
+      properties:
+        choice:
+          $ref: "#/components/schemas/Choice"
+    Choice:
       description: The user's choice in the game.
       type: string
       enum:
