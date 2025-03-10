@@ -1,6 +1,5 @@
 package es.damarur.rock.paper.scissors.service.strategy;
 
-import es.damarur.rock.paper.scissors.exception.InvalidGameException;
 import es.damarur.rock.paper.scissors.model.Choice;
 import es.damarur.rock.paper.scissors.model.Result;
 import org.springframework.stereotype.Component;
@@ -15,15 +14,11 @@ public class PaperChoice implements ChoiceSelection {
 
 	@Override
 	public Result result(Choice userChoice) {
-		if (userChoice == Choice.ROCK) {
-			return Result.WIN;
-		} else if (userChoice == Choice.PAPER) {
-			return Result.DRAW;
-		} else if (userChoice == Choice.SCISSORS) {
-			return Result.LOSE;
-		} else {
-			throw InvalidGameException.invalidGame();
-		}
+		return switch (userChoice) {
+			case Choice.ROCK -> Result.WIN;
+			case Choice.PAPER -> Result.DRAW;
+			case Choice.SCISSORS -> Result.LOSE;
+		};
 	}
 
 }
