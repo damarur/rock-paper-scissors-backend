@@ -26,6 +26,6 @@ jobs:
         distribution: 'temurin'
         cache: maven
     - name: Build with Maven and run SonarCloud
-      run: mvn -B verify sonar:sonar -Dsonar.projectKey=rock-paper-scissors-backend -Dsonar.organization=damarur -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=${{ secrets.SONAR_TOKEN }}
+      run: mvn -B verify sonar:sonar -Dsonar.projectKey=rock-paper-scissors-backend -Dsonar.organization=damarur -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=${{ SONAR_TOKEN }}
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
