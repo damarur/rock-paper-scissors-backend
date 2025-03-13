@@ -16,4 +16,6 @@ public interface GameMapper {
 
 	Choice toChoice(ChoiceDTO choiceDTO);
 
+	ChoiceDTO toChoiceDTO(Choice choice);
+
 }

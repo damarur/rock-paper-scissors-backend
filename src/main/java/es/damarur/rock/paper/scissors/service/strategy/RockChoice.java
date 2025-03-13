@@ -16,8 +16,8 @@ public class RockChoice implements ChoiceSelection {
 	public Result result(Choice userChoice) {
 		return switch (userChoice) {
 			case Choice.ROCK -> Result.DRAW;
-			case Choice.PAPER -> Result.LOSE;
-			case Choice.SCISSORS -> Result.WIN;
+			case Choice.PAPER -> Result.WIN;
+			case Choice.SCISSORS -> Result.LOSE;
 		};
 	}
 

@@ -8,9 +8,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import es.damarur.rock.paper.scissors.fixtures.GameResultDTOTestObject;
 import es.damarur.rock.paper.scissors.fixtures.GameTestObject;
 import es.damarur.rock.paper.scissors.generated.dto.ChoiceDTO;
-import es.damarur.rock.paper.scissors.generated.dto.ChoiceSelectionDTO;
+import es.damarur.rock.paper.scissors.generated.dto.GameDTO;
 import es.damarur.rock.paper.scissors.generated.dto.GameResultDTO;
-import es.damarur.rock.paper.scissors.mapper.GameMapper;
 import es.damarur.rock.paper.scissors.service.GameService;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
@@ -28,17 +27,18 @@ class GameControllerTest extends BaseControllerTest {
 	@EnumSource(value = ChoiceDTO.class)
 	void playGame(ChoiceDTO choiceDTO) throws Exception {
 		// Given
-		ChoiceSelectionDTO choiceSelectionDTO = new ChoiceSelectionDTO().choice(choiceDTO);
+		GameDTO gameDTO = new GameDTO().choice(choiceDTO).nickname("testUser");
 
 		// When
-		when(gameService.playGame(GameMapper.INSTANCE.toChoice(choiceDTO))).thenReturn(GameTestObject.createDefault());
+		when(gameService.playGame(gameDTO)).thenReturn(GameTestObject.createDefault());
 
 		// Then
 		GameResultDTO expectedGameResultDTO = GameResultDTOTestObject.createDefault();
 		mockMvc.perform(post("/play")
 				.contentType(MediaType.APPLICATION_JSON)
-				.content(objectMapper.writeValueAsString(choiceSelectionDTO)))
+				.content(objectMapper.writeValueAsString(gameDTO)))
 			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.nickname").value(expectedGameResultDTO.getNickname()))
 			.andExpect(jsonPath("$.user_choice").value(expectedGameResultDTO.getUserChoice().getValue()))
 			.andExpect(jsonPath("$.machine_choice").value(expectedGameResultDTO.getMachineChoice().getValue()))
 			.andExpect(jsonPath("$.result").value(expectedGameResultDTO.getResult().getValue()));

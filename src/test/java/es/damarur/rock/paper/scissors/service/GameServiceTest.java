@@ -9,6 +9,9 @@ import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.when;
 
 import es.damarur.rock.paper.scissors.fixtures.GameTestObject;
+import es.damarur.rock.paper.scissors.generated.dto.ChoiceDTO;
+import es.damarur.rock.paper.scissors.generated.dto.GameDTO;
+import es.damarur.rock.paper.scissors.mapper.GameMapper;
 import es.damarur.rock.paper.scissors.model.Choice;
 import es.damarur.rock.paper.scissors.model.Game;
 import es.damarur.rock.paper.scissors.model.Result;
@@ -70,17 +73,17 @@ class GameServiceTest {
 		@MethodSource("getExpectedResults")
 		void playGame(Choice userChoice, Result expectedResult) {
 			// Given
-			Choice machineChoice = Choice.PAPER;
+			GameDTO gameDTO = new GameDTO().choice(GameMapper.INSTANCE.toChoiceDTO(userChoice)).nickname("testUser");
 
 			// When
-			when(gameRepository.save(any(Game.class))).thenReturn(GameTestObject.createDefault(userChoice, machineChoice, expectedResult));
+			when(gameRepository.save(any(Game.class))).thenReturn(GameTestObject.createDefault(userChoice, Choice.PAPER, expectedResult));
 			when(rockChoice.machineChoice()).thenReturn(Choice.ROCK);
 			when(paperChoice.machineChoice()).thenReturn(Choice.PAPER);
 			when(scissorsChoice.machineChoice()).thenReturn(Choice.SCISSORS);
 			when(paperChoice.result(userChoice)).thenReturn(expectedResult);
 
 			// Then
-			Game resultGame = gameService.playGame(userChoice);
+			Game resultGame = gameService.playGame(gameDTO);
 			assertThat(resultGame.getUserChoice()).isEqualTo(userChoice);
 			assertThat(resultGame.getMachineChoice()).isEqualTo(Choice.PAPER);
 			assertThat(resultGame.getResult()).isEqualTo(expectedResult);
@@ -88,9 +91,9 @@ class GameServiceTest {
 
 		private static Stream<Arguments> getExpectedResults() {
 			return Stream.of(
-				Arguments.of(Choice.ROCK, Result.WIN),
+				Arguments.of(Choice.ROCK, Result.LOSE),
 				Arguments.of(Choice.PAPER, Result.DRAW),
-				Arguments.of(Choice.SCISSORS, Result.LOSE)
+				Arguments.of(Choice.SCISSORS, Result.WIN)
 			);
 		}
 
@@ -107,10 +110,10 @@ class GameServiceTest {
 		@Test
 		void playGame() {
 			// Arrange
-			Choice userChoice = Choice.ROCK;
+			GameDTO gameDTO = new GameDTO().choice(ChoiceDTO.ROCK).nickname("testUser");
 
 			// Act & Assert
-			IllegalStateException exception = assertThrows(IllegalStateException.class, () -> gameService.playGame(userChoice));
+			IllegalStateException exception = assertThrows(IllegalStateException.class, () -> gameService.playGame(gameDTO));
 			assertEquals("No strategy found for user choice: ROCK", exception.getMessage());
 		}
 

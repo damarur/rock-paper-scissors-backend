@@ -8,6 +8,7 @@ public class GameResultDTOTestObject {
 
 	public static GameResultDTO createDefault() {
 		GameResultDTO gameResultDTO = new GameResultDTO();
+		gameResultDTO.setNickname("testUser");
 		gameResultDTO.setUserChoice(ChoiceDTO.ROCK);
 		gameResultDTO.setMachineChoice(ChoiceDTO.PAPER);
 		gameResultDTO.setResult(ResultDTO.LOSE);

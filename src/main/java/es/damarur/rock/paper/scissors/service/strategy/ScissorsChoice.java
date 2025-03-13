@@ -15,8 +15,8 @@ public class ScissorsChoice implements ChoiceSelection {
 	@Override
 	public Result result(Choice userChoice) {
 		return switch (userChoice) {
-			case Choice.ROCK -> Result.LOSE;
-			case Choice.PAPER -> Result.WIN;
+			case Choice.ROCK -> Result.WIN;
+			case Choice.PAPER -> Result.LOSE;
 			case Choice.SCISSORS -> Result.DRAW;
 		};
 	}

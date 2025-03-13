@@ -34,3 +34,4 @@ build/
 /src/main/.openapi-generator/
 /src/main/java/es/damarur/rock/paper/scissors/generated/
 src/main/.openapi-generator-ignore
+/postgresql/
