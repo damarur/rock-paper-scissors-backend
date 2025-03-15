@@ -10,7 +10,9 @@ import es.damarur.rock.paper.scissors.repository.GameRepository;
 import es.damarur.rock.paper.scissors.service.strategy.ChoiceSelection;
 import java.time.Instant;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +22,11 @@ public class GameService {
 
 	private final GameRepository gameRepository;
 	private final List<ChoiceSelection> choiceSelectionList;
+
+	public Map<Result, Long> getGames(String nickname) {
+		return gameRepository.countGroupByResultForNickname(nickname).stream()
+			.collect(Collectors.toMap(k -> k.result(), v -> v.count()));
+	}
 
 	public Game playGame(GameDTO game) {
 		Choice userChoice = GameMapper.INSTANCE.toChoice(game.getChoice());

@@ -30,8 +30,31 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/GameResult"
+  /games:
+    get:
+      summary: Get games based on a nickname
+      operationId: getGames
+      tags:
+        - Game
+      parameters:
+        - $ref: "#/components/parameters/nickname"
+      responses:
+        200:
+          description: Statistics for nickname
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserStats"
 
 components:
+  parameters:
+    nickname:
+      name: nickname
+      in: query
+      required: true
+      description: nickname from user
+      schema:
+        type: string
   schemas:
     GameResult:
       type: object
@@ -72,3 +95,14 @@ components:
         - WIN
         - LOSE
         - DRAW
+    UserStats:
+      type: object
+      properties:
+        nickname:
+          type: string
+        wins:
+          type: number
+        draws:
+          type: number
+        losses:
+          type: number

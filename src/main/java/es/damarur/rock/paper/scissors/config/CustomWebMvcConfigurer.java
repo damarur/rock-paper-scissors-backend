@@ -17,7 +17,7 @@ public class CustomWebMvcConfigurer {
 				registry
 					.addMapping("/**")
 					.allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
-					.allowedOrigins("https://localhost", "http://localhost:4200")
+					.allowedOrigins("http://localhost:4200")
 					.allowCredentials(false)
 					.exposedHeaders("Location");
 			}
