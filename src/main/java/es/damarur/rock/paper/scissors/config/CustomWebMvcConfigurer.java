@@ -18,6 +18,7 @@ public class CustomWebMvcConfigurer {
 					.addMapping("/**")
 					.allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
 					.allowedOrigins("http://localhost:4200")
+					.allowedHeaders("x-api-key")
 					.allowCredentials(false)
 					.exposedHeaders("Location");
 			}
