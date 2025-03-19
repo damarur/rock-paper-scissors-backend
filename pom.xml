@@ -25,6 +25,8 @@
     <mapstruct.version>1.6.3</mapstruct.version>
     <testcontainers.version>1.20.6</testcontainers.version>
     <openapi-basedir>${project.basedir}/src/main/resources/openapi</openapi-basedir>
+    <sonar.organization>damarur</sonar.organization>
+    <sonar.host.url>https://sonarcloud.io</sonar.host.url>
   </properties>
   <dependencies>
     <dependency>

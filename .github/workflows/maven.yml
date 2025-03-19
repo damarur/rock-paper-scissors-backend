@@ -26,4 +26,6 @@ jobs:
           distribution: 'temurin'
           cache: maven
       - name: Build with Maven
-        run: mvn -B clean package
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: mvn -B clean package org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=damarur_rock-paper-scissors-backend
